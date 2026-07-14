@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>FORGE.ONE — Build what survives</title>
+<style>
+:root{
+  --bg:#080808;--panel:#111;--line:#292929;--text:#f5f1e8;
+  --muted:#aaa39a;--gold:#d9aa4b;--green:#69d697;--red:#ef756e
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:
+  radial-gradient(circle at 15% 0,rgba(217,170,75,.14),transparent 30%),
+  var(--bg);
+  color:var(--text);font-family:system-ui,sans-serif;min-height:100vh
+}
+header{
+  padding:18px 24px;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center
+}
+.brand{font-weight:900;letter-spacing:.16em;color:var(--gold)}
+small{color:var(--muted)}
+main{width:min(820px,calc(100% - 30px));margin:auto;padding:70px 0}
+section{display:none}
+section.active{display:block}
+h1{font-size:clamp(3rem,10vw,6rem);line-height:.94;margin:0 0 22px}
+h1 span{color:var(--gold)}
+.lead{font-size:1.2rem;color:var(--muted);max-width:650px}
+.card{
+  background:linear-gradient(145deg,#151515,#0e0e0e);
+  border:1px solid var(--line);border-radius:22px;padding:28px
+}
+button{
+  border:0;border-radius:12px;padding:14px 20px;font-weight:800;
+  cursor:pointer;margin-top:18px
+}
+.primary{background:var(--gold);color:#171108}
+.secondary{background:#1b1b1b;color:var(--text);border:1px solid var(--line)}
+textarea{
+  width:100%;min-height:150px;background:#090909;color:var(--text);
+  border:1px solid var(--line);border-radius:14px;padding:16px;
+  font:inherit;resize:vertical
+}
+.progress{height:7px;background:#222;border-radius:99px;margin:18px 0 28px}
+.progress div{height:100%;background:var(--gold);border-radius:99px}
+.hint{color:var(--muted);font-size:.95rem}
+.actions{display:flex;justify-content:space-between;gap:12px}
+.badge{
+  display:inline-block;padding:6px 10px;border-radius:99px;
+  background:rgba(217,170,75,.12);color:var(--gold);
+  font-weight:800;font-size:.8rem
+}
+.result{border-left:4px solid var(--gold)}
+pre{
+  white-space:pre-wrap;background:#090909;border:1px solid var(--line);
+  padding:18px;border-radius:14px;color:#ddd;line-height:1.55
+}
+footer{text-align:center;color:var(--muted);padding:35px}
+@media(max-width:550px){main{padding-top:38px}.actions{flex-direction:column-reverse}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="brand">FORGE.ONE</div>
+    <small>An Outlaw Lab system</small>
+  </div>
+  <small>Reality starts here.</small>
+</header>
+
+<main>
+<section id="home" class="active">
+  <span class="badge">INCREASE CONTACT WITH REALITY</span>
+  <h1>Don't build more.<br><span>Build what survives.</span></h1>
+  <p class="lead">
+    FORGE.ONE challenges assumptions, exposes weak evidence and gives
+    you one real-world mission before you spend more time or money.
+  </p>
+  <button class="primary" onclick="start()">Start Forging</button>
+</section>
+
+<section id="forge">
+  <div class="card">
+    <div id="count" class="badge"></div>
+    <div class="progress"><div id="bar"></div></div>
+    <h2 id="question"></h2>
+    <p id="hint" class="hint"></p>
+    <textarea id="answer" placeholder="Write the truth, not the pitch."></textarea>
+    <div class="actions">
+      <button class="secondary" onclick="back()">Back</button>
+      <button class="primary" onclick="next()">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section id="report">
+  <div class="card result">
+    <span class="badge">FORGE DECISION</span>
+    <h2 id="verdict"></h2>
+    <p id="summary" class="lead"></p>
+    <pre id="output"></pre>
+    <div class="actions">
+      <button class="secondary" onclick="copyReport()">Copy report</button>
+      <button class="primary" onclick="restart()">Forge another idea</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>Dream → Forge → Decision → Action → Reality → Learning → Dream++</footer>
+
+<script>
+const questions=[
+  ["What are you trying to build?","Describe the product and the change it creates."],
+  ["Who feels this problem most?","Choose one specific customer group. Not everyone."],
+  ["What does the problem cost them?","Use money, time, risk, stress or lost momentum."],
+  ["What evidence exists today?","Interviews, payments, usage or repeated requests."],
+  ["What are you assuming?","Name the belief that could still be completely wrong."],
+  ["What would prove you wrong?","Define the result that should stop or change the idea."],
+  ["What is the smallest real-world test?","Test behavior or payment before building more."]
+];
+
+let step=0;
+let answers=new Array(questions.length).fill("");
+
+function show(id){
+  document.querySelectorAll("main section").forEach(x=>x.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+function start(){
+  step=0;
+  render();
+  show("forge");
+}
+
+function render(){
+  document.getElementById("count").textContent=`QUESTION ${step+1} OF ${questions.length}`;
+  document.getElementById("bar").style.width=`${((step+1)/questions.length)*100}%`;
+  document.getElementById("question").textContent=questions[step][0];
+  document.getElementById("hint").textContent=questions[step][1];
+  document.getElementById("answer").value=answers[step];
+  document.getElementById("answer").focus();
+}
+
+function next(){
+  const value=document.getElementById("answer").value.trim();
+  if(value.length<4){
+    alert("Forge needs a real answer.");
+    return;
+  }
+  answers[step]=value;
+  if(step<questions.length-1){
+    step++;
+    render();
+  }else{
+    decide();
+  }
+}
+
+function back(){
+  answers[step]=document.getElementById("answer").value.trim();
+  if(step===0){show("home");return}
+  step--;
+  render();
+}
+
+function decide(){
+  const evidence=answers[3].toLowerCase();
+  const test=answers[6].toLowerCase();
+
+  let score=35;
+  answers.forEach(a=>{
+    if(a.length>25)score+=5;
+    if(/\d|€|\$|kr|paid|payment|customer|interview/.test(a.toLowerCase()))score+=3;
+  });
+  score=Math.min(score,96);
+
+  const paid=/paid|payment|preorder|revenue|customer paid|betalt/.test(evidence);
+  const realTest=/sell|offer|interview|landing|preorder|pilot|pay|customer/.test(test);
+
+  let verdict="STOP AND NARROW";
+  let summary="The idea still contains too many assumptions to justify building more.";
+
+  if(score>=76 && paid && realTest){
+    verdict="PROCEED TO SANDBOX";
+    summary="The idea has enough evidence for a controlled next-stage test.";
+  }else if(score>=58 && realTest){
+    verdict="DO NOT BUILD MORE YET";
+    summary="Run the smallest real-world test before writing more code.";
+  }
+
+  const report=`FORGE.ONE REPORT
+
+IDEA
+${answers[0]}
+
+TARGET CUSTOMER
+${answers[1]}
+
+COST OF THE PROBLEM
+${answers[2]}
+
+CURRENT EVIDENCE
+${answers[3]}
+
+DANGEROUS ASSUMPTION
+${answers[4]}
+
+STOP CONDITION
+${answers[5]}
+
+REALITY MISSION
+${answers[6]}
+
+REALITY SCORE
+${score}/100
+
+VERDICT
+${verdict}
+
+NEXT MOVE
+Run the reality mission with the target customer group.
+Record yes, no, payment and the objection that repeats.
+
+Nothing reaches CORE before surviving FORGE.`;
+
+  document.getElementById("verdict").textContent=verdict;
+  document.getElementById("summary").textContent=summary;
+  document.getElementById("output").textContent=report;
+  show("report");
+}
+
+function copyReport(){
+  navigator.clipboard.writeText(document.getElementById("output").textContent);
+}
+
+function restart(){
+  answers.fill("");
+  start();
+}
+</script>
+</body>
+</html>
