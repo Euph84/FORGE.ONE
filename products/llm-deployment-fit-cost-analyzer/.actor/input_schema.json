@@ -1,0 +1,16 @@
+{
+  "title": "LLM Deployment Fit & Cost Analyzer",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "parameter_count_b": {"title": "Model parameters (billions)", "type": "number", "minimum": 0.1},
+    "quantization_bits": {"title": "Quantization bits", "type": "integer", "enum": [4,8,16], "default": 16},
+    "gpu_vram_gb": {"title": "Candidate GPU VRAM (GB)", "type": "number", "minimum": 1},
+    "context_length": {"title": "Target context length", "type": "integer", "minimum": 512, "default": 8192},
+    "concurrency": {"title": "Expected concurrent sequences", "type": "integer", "minimum": 1, "default": 1},
+    "architecture_overhead_pct": {"title": "Runtime overhead reserve (%)", "type": "number", "minimum": 5, "maximum": 80, "default": 25},
+    "price_per_hour_usd": {"title": "Optional GPU price per hour (USD)", "type": "number", "minimum": 0},
+    "hours_per_month": {"title": "Optional expected GPU hours per month", "type": "number", "minimum": 0, "maximum": 744}
+  },
+  "required": ["parameter_count_b","quantization_bits","gpu_vram_gb","context_length","concurrency"]
+}
