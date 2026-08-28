@@ -1,0 +1,9 @@
+{
+  "analysis-completed": {
+    "eventTitle": "Deployment analysis completed",
+    "eventDescription": "Charged once after a complete analysis result has been produced.",
+    "eventPriceUsd": 0.25,
+    "isPrimaryEvent": true,
+    "isOneTimeEvent": true
+  }
+}

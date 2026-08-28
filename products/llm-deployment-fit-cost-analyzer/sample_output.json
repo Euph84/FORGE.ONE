@@ -1,0 +1,32 @@
+{
+  "fit": "RISK",
+  "oom_risk": "MEDIUM",
+  "estimated_weight_memory_gb": 16.0,
+  "runtime_reserve_gb": 4.0,
+  "kv_cache_risk_proxy_gb": 0.6,
+  "estimated_memory_floor_gb": 20.6,
+  "candidate_gpu_vram_gb": 24,
+  "estimated_headroom_gb": 3.4,
+  "recommended_min_vram_class_gb": 32,
+  "recommended_vllm_args": {
+    "gpu_memory_utilization": 0.78,
+    "max_model_len": 8192,
+    "max_num_seqs": 1,
+    "note": "Starting point only; benchmark before production."
+  },
+  "benchmark_required": true,
+  "economics": {
+    "available": true,
+    "price_per_hour_usd": 0.44,
+    "hours_per_month": 200,
+    "estimated_monthly_gpu_cost_usd": 88.0,
+    "note": "User-supplied price; no live provider price lookup performed."
+  },
+  "assumptions": [
+    "Weight memory is estimated from parameter count and quantization only.",
+    "KV-cache is a risk proxy, not architecture-exact.",
+    "Exact production sizing requires model metadata and representative benchmarking.",
+    "No live provider pricing is used unless explicitly supplied by the caller."
+  ],
+  "next_action": "Increase headroom or reduce context/concurrency; benchmark before production."
+}
