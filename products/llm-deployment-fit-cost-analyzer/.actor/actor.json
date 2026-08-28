@@ -4,9 +4,8 @@
   "title": "LLM Deployment Fit & Cost Analyzer",
   "description": "Deterministic first-pass GPU fit, VRAM risk and cost analysis for vLLM-style workloads.",
   "version": "0.3",
-  "build": {"dockerfile": "../Dockerfile"},
+  "dockerfile": "../Dockerfile",
   "input": "./input_schema.json",
-  "storages": {"dataset": {"actorSpecification": 1}},
   "minMemoryMbytes": 128,
   "maxMemoryMbytes": 256
 }
