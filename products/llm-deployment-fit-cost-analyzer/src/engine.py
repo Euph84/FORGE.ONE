@@ -48,7 +48,11 @@ def analyze(x: AnalysisInput) -> dict:
     else:
         fit, oom_risk = "PASS", "LOW"
 
-    benchmark_required = fit != "PASS" or x.context_length >= 32768 or x.concurrency >= 8
+    # This version has no architecture-specific KV-cache metadata, so every
+    # static estimate still requires representative benchmarking before it can
+    # be treated as deployment-ready. A PASS means "credible static fit", not
+    # "verified production fit".
+    benchmark_required = True
     target = max(floor_gb / 0.78, floor_gb + 2.0)
     classes = [16, 24, 32, 48, 64, 80, 96, 141, 192]
     recommended_class = next((v for v in classes if v >= target), ceil(target))

@@ -8,6 +8,12 @@ def test_small_quantized_model_passes():
     assert r["fit"] == "PASS"
 
 
+def test_pass_still_requires_benchmark_without_architecture_metadata():
+    r = analyze(AnalysisInput(8, 4, 24, 8192, 1))
+    assert r["fit"] == "PASS"
+    assert r["benchmark_required"] is True
+
+
 def test_mid_model_is_risk():
     r = analyze(AnalysisInput(32, 4, 24, 8192, 1))
     assert r["fit"] == "RISK"
